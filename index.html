@@ -5,35 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Multiplayer</title>
-  <link rel="stylesheet" href="style.css" type="text/css">
+  <link rel="stylesheet" href="styles/style.css" type="text/css">
 </head>
 <body>
-  <div class="container">
+  <div id="game-container">
+    <canvas id="canvas" width="800" height="600"></canvas>
+  </div>
+  <div id="login-container">
     <h1>Multiplayer</h1>
     Kod gry<br>
-    <input id="code" type="number"><br>
+    <input id="code" type="number" value="123"><br>
     Nick<br>
-    <input id="player-name" type="text"><br>
+    <input id="player-name" type="text" value="Test"><br>
     <button id="join-button">Dołącz</button>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const joinButton = document.getElementById("join-button");
-
-      joinButton.addEventListener('click', () => {
-        const code = Number(document.getElementById("code").value.replace(/\s+/g, ' ').trim());
-        const playerName = document.getElementById("player-name").value.replace(/\s+/g, ' ').trim();
-
-        if (!isNaN(code) && playerName.length > 0) {
-          const socket = io();
-
-          socket.emit('join-game', {
-            code,
-            playerName,
-          });
-        }
-      });
-    </script>
+    <script src="/app.js"></script>
+    <script src="/scripts/joinGame.js"></script>
   </div>
 </body>
 </html>

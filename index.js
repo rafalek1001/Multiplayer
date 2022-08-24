@@ -14,13 +14,13 @@ app.use(express.static(
   path.join(__dirname, "/")
 ));
 
-io.on('connection', (socket) => {
-  socket.on('join-game', (data) => {
+io.on('connection', (socket) => { // Połączenie socketa
+  socket.on('joinGame', (data) => { // Dołączanie do gry
     socket.playerName = data.playerName;
     console.log(`Gracz ${data.playerName} dołączył do gry.`);
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', () => { // Opuszczanie gry
     console.log(`Gracz ${socket.playerName} wyszedł z gry.`);
   });
 });

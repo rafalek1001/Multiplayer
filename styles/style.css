@@ -1,0 +1,10 @@
+#join-button {
+  margin-top: 5px;
+}
+
+#game-container {
+  display: none;
+  width: max-content;
+  margin: auto;
+  margin-top: 40px;
+}
