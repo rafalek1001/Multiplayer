@@ -6,20 +6,23 @@ const ctx = canvas.getContext('2d');
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
+
 const TILE_SIZE = 96;
+const SPEED = 5;
 
 const MAP_WIDTH = WIDTH / TILE_SIZE;
 const MAP_HEIGHT = HEIGHT / TILE_SIZE;
 
 const tiles = [];
 
-const playerX = 0; // Kordynanty X początkowe gracza
-const playerY = 0; // Kordynanty Y początkowe gracza
+let playerX = 0; // Kordynanty X początkowe gracza
+let playerY = 0; // Kordynanty Y początkowe gracza
 
 // Grass = 0;
 // Wall = 1;
 
-const createImage = path => { // Funkcja tworzenia obrazu
+// Funkcja tworzenia obrazu
+const createImage = path => {
   const image = document.createElement('img');
   image.src = `images/${path}.png`;
   return image;
@@ -32,12 +35,29 @@ const tileNames = [
 ];
 
 const tileImages = [];
+const keys = {};
 
-const joinGame = () => { // Dołączanie do gry
+const allTheRightMoves = {
+  W: [0, -1],
+  S: [0, 1],
+  A: [-1, 0],
+  D: [1, 0],
+};
+
+// Dołączanie do gry
+const joinGame = () => {
   document.body.style.backgroundColor = '#121212';
 
   gameContainer.style.display = 'block';
   loginContainer.style.display = 'none';
+
+  document.body.onkeydown = e => {
+    keys[e.key.toUpperCase()] = true;
+  }
+
+  document.body.onkeyup = e => {
+    keys[e.key.toUpperCase()] = false;
+  }
 
   loadImages();
   initTiles();
@@ -64,28 +84,40 @@ const initTiles = () => {
   }
 }
 
-const draw = () => { // Funkcja rysowania
+// Funkcja rysowania
+const draw = () => {
   requestAnimationFrame(draw);
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  const xOffset = WIDTH / 2 - TILE_SIZE / 2;
-  const yOffset = HEIGHT / 2 - TILE_SIZE / 2;
+  const xOffSet = WIDTH / 2 - TILE_SIZE / 2;
+  const yOffSet = HEIGHT / 2 - TILE_SIZE / 2;
 
   // Renderowanie kafelków
   for (let x = 0; x < MAP_WIDTH; x++) {
     for (let y = 0; y < MAP_HEIGHT; y++) {
       const tile = tiles[x][y];
 
-      const tileX = xOffset + tile.xPos * TILE_SIZE;
-      const tileY = yOffset + tile.yPos * TILE_SIZE;
+      const tileX = tile.xPos * TILE_SIZE - playerX + xOffSet;
+      const tileY = tile.yPos * TILE_SIZE - playerY + yOffSet;
 
       ctx.drawImage(tileImages[tile.type], tileX, tileY);
+
+      console.log(keys);
     }
   }
 
   // Renderowanie gracza
-  ctx.drawImage(playerImg, xOffset + playerX, yOffset + playerY);
+  ctx.drawImage(playerImg, xOffSet, yOffSet);
+
+  // Poruszanie się gracza
+  for (const keyOfObj in keys) {
+    const playerMove = allTheRightMoves[keyOfObj];
+    if (keys[keyOfObj] && playerMove) {
+      playerX += playerMove[0] * SPEED;
+      playerY += playerMove[1] * SPEED;
+    }
+  }
 }
 
 const getRandom = (min, max) => {

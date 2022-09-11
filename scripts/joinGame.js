@@ -15,3 +15,5 @@ joinButton.addEventListener('click', () => {
     joinGame();
   }
 });
+
+joinButton.click();
